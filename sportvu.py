@@ -4,27 +4,17 @@ import matplotlib.pyplot as plt
 import matplotlib
 import numpy as np
 # Feel free to add anything else you need here
+import pandas as pd
 
 # Read the event log into an array of dictionaries
 events = []
-with open('0021500495.csv', mode='r') as event_csv:
-    event_reader = csv.DictReader(event_csv)
-    line_count = 0
-    for row in event_reader:
-        events.append(dict(row))
 
-# Read in the SportVU tracking data
-sportvu = []
-with open('0021500495.json', mode='r') as sportvu_json:
-    sportvu = json.load(sportvu_json)
-
-
-
+metrics = pd.read_csv('final_metrics.csv')
 
 # YOUR SOLUTION GOES HERE
 # These are the two arrays that you need to populate with actual data
-shot_times = np.array([30, 705, 1870, 2500]) # Between 0 and 2880
-shot_facts = np.array([5, 10, 8, 2]) # Scaled between 0 and 10
+shot_times = metrics.shot_times.values # Between 0 and 2880
+shot_facts = metrics.quality_score.values # Scaled between 0 and 10
 
 
 
@@ -36,7 +26,7 @@ fig, ax = plt.subplots(figsize=(12,3))
 fig.canvas.set_window_title('Shot Timeline')
 
 plt.scatter(shot_times, np.full_like(shot_times, 0), marker='o', s=50, color='royalblue', edgecolors='black', zorder=3, label='shot')
-plt.bar(shot_times, shot_facts, bottom=2, color='royalblue', edgecolor='black', width=5, label='shot fact') # <- This is the label you can modify
+plt.bar(shot_times, shot_facts, bottom=2, color='royalblue', edgecolor='black', width=5, label='Quality (Close to rim + Away from defender + Set feet)') # <- This is the label you can modify
 
 ax.spines['bottom'].set_position('zero')
 ax.spines['top'].set_color('none')
